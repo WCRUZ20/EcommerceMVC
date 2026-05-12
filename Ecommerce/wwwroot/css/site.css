@@ -73,7 +73,8 @@ body {
   gap: 0.35rem;
 }
 
-.app-sidebar__link {
+.app-sidebar__link,
+.app-sidebar__group-title {
   align-items: center;
   border-radius: 0.8rem;
   color: #dce4f2;
@@ -85,8 +86,34 @@ body {
 }
 
 .app-sidebar__link:hover,
-.app-sidebar__link.active {
+.app-sidebar__link.active,
+.app-sidebar__group.active .app-sidebar__group-title {
   background-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.app-sidebar__group-title {
+  font-weight: 600;
+}
+
+.app-sidebar__submenu {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.25rem;
+  padding-left: 2.35rem;
+}
+
+.app-sidebar__sublink {
+  border-radius: 0.65rem;
+  color: #c7d2e5;
+  padding: 0.55rem 0.75rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.app-sidebar__sublink:hover,
+.app-sidebar__sublink.active {
+  background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
