@@ -1,4 +1,4 @@
-@model IReadOnlyList<Ecommerce.Models.Product>
+@model IReadOnlyList<Ecommerce.Models.ViewModels.ProductListItemViewModel>
 
 @{
     ViewData["Title"] = "Lista de productos";
@@ -31,6 +31,8 @@
                             <th>Descripción larga</th>
                             <th class="text-end">Stock</th>
                             <th class="text-end">Precio regular</th>
+                            <th class="text-end">Descuento (%)</th>
+                            <th class="text-end">Precio final</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,6 +44,8 @@
                                 <td>@product.LongDescripcion</td>
                                 <td class="text-end">@product.Stock</td>
                                 <td class="text-end">@product.RegularPrice.ToString("C")</td>
+                                <td class="text-end">@(product.DiscountPercent?.ToString("0.##") ?? "-")</td>
+                                <td class="text-end">@(product.FinalPrice?.ToString("C") ?? "-")</td>
                             </tr>
                         }
                     </tbody>
