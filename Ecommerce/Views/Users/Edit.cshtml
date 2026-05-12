@@ -1,8 +1,8 @@
 @using System.Text.Json
-@model Ecommerce.Models.ViewModels.CreateUserViewModel
+@model Ecommerce.Models.ViewModels.EditUserViewModel
 
 @{
-    ViewData["Title"] = "Crear usuario";
+    ViewData["Title"] = "Editar usuario";
     var countValidByTipoDocumento = JsonSerializer.Serialize(Model.CountValidByTipoDocumento);
 }
 
@@ -10,9 +10,10 @@
     <div class="col-12 col-lg-8">
         <div class="card dashboard-card">
             <div class="card-body p-4">
-                <h2 class="h4 mb-4">Crear usuario</h2>
+                <h2 class="h4 mb-4">Editar usuario</h2>
 
-                <form asp-action="Create" method="post" novalidate data-document-form>
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post" novalidate data-document-form>
+                    <input asp-for="Id" type="hidden" />
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                     <div class="row g-3">
@@ -68,12 +69,6 @@
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" autocomplete="new-password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-12 col-md-6">
                             <label asp-for="Role" class="form-label"></label>
                             <select asp-for="Role" class="form-select">
                                 <option value="User">Usuario</option>
@@ -84,7 +79,7 @@
                     </div>
 
                     <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
                         <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
                     </div>
                 </form>

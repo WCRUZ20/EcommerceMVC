@@ -1,5 +1,7 @@
+using Ecommerce.Models;
 using Ecommerce.Models.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace Ecommerce.Data;
@@ -14,6 +16,12 @@ public static class AdminUserSeeder
         var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(AdminUserSeeder));
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+        await SeedDocumentTypesAsync(dbContext);
+        var pasaporte = await dbContext.TiposDocumento
+            .AsNoTracking()
+            .FirstOrDefaultAsync(tipoDocumento => tipoDocumento.Descripcion == "Pasaporte");
 
         if (string.IsNullOrWhiteSpace(options.UserName) ||
             string.IsNullOrWhiteSpace(options.Email) ||
@@ -45,7 +53,8 @@ public static class AdminUserSeeder
                 Email = options.Email,
                 FirstName = "Admin",
                 LastName = "Sistema",
-                TipoDoc = "N/A",
+                TipoDocumentoId = pasaporte?.Id,
+                TipoDoc = pasaporte?.Descripcion ?? "Pasaporte",
                 NumDocumento = "ADMIN",
                 EmailConfirmed = true,
                 CreatedAtUtc = DateTime.UtcNow
@@ -69,6 +78,21 @@ public static class AdminUserSeeder
                 LogIdentityErrors(logger, "admin user role assignment", addToRoleResult.Errors);
             }
         }
+    }
+
+    private static async Task SeedDocumentTypesAsync(ApplicationDbContext dbContext)
+    {
+        if (await dbContext.TiposDocumento.AnyAsync())
+        {
+            return;
+        }
+
+        dbContext.TiposDocumento.AddRange(
+            new TipoDocumento { Descripcion = "Cedula", CountValid = 10 },
+            new TipoDocumento { Descripcion = "Ruc", CountValid = 13 },
+            new TipoDocumento { Descripcion = "Pasaporte", CountValid = null });
+
+        await dbContext.SaveChangesAsync();
     }
 
     private static void LogIdentityErrors(ILogger logger, string operation, IEnumerable<IdentityError> errors)
