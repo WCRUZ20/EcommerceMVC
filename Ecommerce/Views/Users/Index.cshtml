@@ -30,6 +30,7 @@
                         <th>Rol</th>
                         <th>Creado</th>
                         <th>Último acceso</th>
+                        <th class="text-end">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,6 +44,9 @@
                             <td>@(user.Roles.Count > 0 ? string.Join(", ", user.Roles) : "Sin rol")</td>
                             <td>@user.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@(user.LastLoginAtUtc?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? "Sin acceso")</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@user.Id">Editar</a>
+                            </td>
                         </tr>
                     }
                 </tbody>

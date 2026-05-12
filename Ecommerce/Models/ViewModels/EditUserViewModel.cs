@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ecommerce.Models.ViewModels;
 
-public class CreateUserViewModel
+public class EditUserViewModel
 {
+    public string Id { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
     [Display(Name = "Nombre de usuario")]
     public string UserName { get; set; } = string.Empty;
@@ -40,11 +42,6 @@ public class CreateUserViewModel
     [StringLength(30, ErrorMessage = "El número de documento no puede superar los 30 caracteres.")]
     [Display(Name = "Número de documento")]
     public string NumDocumento { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "La contraseña es obligatoria.")]
-    [DataType(DataType.Password)]
-    [Display(Name = "Contraseña temporal")]
-    public string Password { get; set; } = string.Empty;
 
     [Display(Name = "Rol")]
     public string Role { get; set; } = "User";

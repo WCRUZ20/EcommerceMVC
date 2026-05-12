@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Ecommerce.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Ecommerce.Models.Identity;
@@ -17,7 +18,11 @@ public class ApplicationUser : IdentityUser
     [MaxLength(100)]
     public string? SecondLastName { get; set; }
 
-    [MaxLength(30)]
+    public int? TipoDocumentoId { get; set; }
+
+    public TipoDocumento? TipoDocumento { get; set; }
+
+    [MaxLength(100)]
     public string TipoDoc { get; set; } = string.Empty;
 
     [MaxLength(30)]
