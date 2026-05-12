@@ -25,6 +25,9 @@ public class UsersController(
                 Id = user.Id,
                 UserName = user.UserName ?? string.Empty,
                 Email = user.Email ?? string.Empty,
+                FullName = FormatFullName(user),
+                TipoDoc = user.TipoDoc,
+                NumDocumento = user.NumDocumento,
                 CreatedAtUtc = user.CreatedAtUtc,
                 LastLoginAtUtc = user.LastLoginAtUtc,
                 Roles = (await userManager.GetRolesAsync(user)).ToList()
@@ -53,6 +56,12 @@ public class UsersController(
         {
             UserName = model.UserName.Trim(),
             Email = model.Email.Trim(),
+            FirstName = model.FirstName.Trim(),
+            MiddleName = string.IsNullOrWhiteSpace(model.MiddleName) ? null : model.MiddleName.Trim(),
+            LastName = model.LastName.Trim(),
+            SecondLastName = string.IsNullOrWhiteSpace(model.SecondLastName) ? null : model.SecondLastName.Trim(),
+            TipoDoc = model.TipoDoc.Trim(),
+            NumDocumento = model.NumDocumento.Trim(),
             EmailConfirmed = true,
             CreatedAtUtc = DateTime.UtcNow
         };
@@ -87,6 +96,19 @@ public class UsersController(
 
         TempData["StatusMessage"] = "Usuario creado correctamente.";
         return RedirectToAction(nameof(Index));
+    }
+
+    private static string FormatFullName(ApplicationUser user)
+    {
+        var nameParts = new[]
+        {
+            user.FirstName,
+            user.MiddleName,
+            user.LastName,
+            user.SecondLastName
+        };
+
+        return string.Join(" ", nameParts.Where(part => !string.IsNullOrWhiteSpace(part)));
     }
 
     private void AddIdentityErrors(IEnumerable<IdentityError> errors)

@@ -22,6 +22,12 @@ public class SettingsController(UserManager<ApplicationUser> userManager) : Cont
         {
             UserName = user.UserName ?? string.Empty,
             Email = user.Email ?? string.Empty,
+            FirstName = user.FirstName,
+            MiddleName = user.MiddleName,
+            LastName = user.LastName,
+            SecondLastName = user.SecondLastName,
+            TipoDoc = user.TipoDoc,
+            NumDocumento = user.NumDocumento,
             PhoneNumber = user.PhoneNumber ?? "No registrado",
             CreatedAtUtc = user.CreatedAtUtc,
             LastLoginAtUtc = user.LastLoginAtUtc

@@ -24,7 +24,9 @@
                 <thead>
                     <tr>
                         <th>Usuario</th>
+                        <th>Nombre completo</th>
                         <th>Correo</th>
+                        <th>Documento</th>
                         <th>Rol</th>
                         <th>Creado</th>
                         <th>Último acceso</th>
@@ -35,7 +37,9 @@
                     {
                         <tr>
                             <td>@user.UserName</td>
+                            <td>@(string.IsNullOrWhiteSpace(user.FullName) ? "Sin nombre" : user.FullName)</td>
                             <td>@user.Email</td>
+                            <td>@user.TipoDoc @user.NumDocumento</td>
                             <td>@(user.Roles.Count > 0 ? string.Join(", ", user.Roles) : "Sin rol")</td>
                             <td>@user.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
                             <td>@(user.LastLoginAtUtc?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? "Sin acceso")</td>

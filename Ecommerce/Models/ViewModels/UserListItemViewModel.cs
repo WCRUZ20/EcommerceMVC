@@ -8,6 +8,12 @@ public class UserListItemViewModel
 
     public string Email { get; set; } = string.Empty;
 
+    public string FullName { get; set; } = string.Empty;
+
+    public string TipoDoc { get; set; } = string.Empty;
+
+    public string NumDocumento { get; set; } = string.Empty;
+
     public DateTime CreatedAtUtc { get; set; }
 
     public DateTime? LastLoginAtUtc { get; set; }
