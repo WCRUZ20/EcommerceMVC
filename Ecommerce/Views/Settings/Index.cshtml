@@ -28,6 +28,24 @@
                     <dt class="col-sm-4">Correo</dt>
                     <dd class="col-sm-8">@Model.Email</dd>
 
+                    <dt class="col-sm-4">Primer nombre</dt>
+                    <dd class="col-sm-8">@Model.FirstName</dd>
+
+                    <dt class="col-sm-4">Segundo nombre</dt>
+                    <dd class="col-sm-8">@(Model.MiddleName ?? "No registrado")</dd>
+
+                    <dt class="col-sm-4">Primer apellido</dt>
+                    <dd class="col-sm-8">@Model.LastName</dd>
+
+                    <dt class="col-sm-4">Segundo apellido</dt>
+                    <dd class="col-sm-8">@(Model.SecondLastName ?? "No registrado")</dd>
+
+                    <dt class="col-sm-4">Tipo de documento</dt>
+                    <dd class="col-sm-8">@Model.TipoDoc</dd>
+
+                    <dt class="col-sm-4">Número de documento</dt>
+                    <dd class="col-sm-8">@Model.NumDocumento</dd>
+
                     <dt class="col-sm-4">Teléfono</dt>
                     <dd class="col-sm-8">@Model.PhoneNumber</dd>
 

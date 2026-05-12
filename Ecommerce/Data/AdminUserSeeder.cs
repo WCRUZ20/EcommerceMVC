@@ -43,6 +43,10 @@ public static class AdminUserSeeder
             {
                 UserName = options.UserName,
                 Email = options.Email,
+                FirstName = "Admin",
+                LastName = "Sistema",
+                TipoDoc = "N/A",
+                NumDocumento = "ADMIN",
                 EmailConfirmed = true,
                 CreatedAtUtc = DateTime.UtcNow
             };

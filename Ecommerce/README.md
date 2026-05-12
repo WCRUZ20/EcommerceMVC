@@ -35,6 +35,25 @@ dotnet ef migrations add InitialIdentitySchema --project Ecommerce/Ecommerce.csp
 dotnet ef database update --project Ecommerce/Ecommerce.csproj
 ```
 
+Las tablas de ASP.NET Core Identity se mapearon sin el prefijo `AspNet`:
+
+- `Users`
+- `Roles`
+- `UserRoles`
+- `UserClaims`
+- `UserLogins`
+- `RoleClaims`
+- `UserTokens`
+
+Si ya tienes una base de datos creada con tablas `AspNet...`, genera una migración nueva desde Visual Studio con la Consola del Administrador de paquetes o desde una terminal:
+
+```bash
+dotnet ef migrations add RenameIdentityTablesAndUserDocumentFields --project Ecommerce/Ecommerce.csproj
+dotnet ef database update --project Ecommerce/Ecommerce.csproj
+```
+
+Revisa la migración antes de aplicarla en producción para confirmar si EF Core detectó los cambios como `RenameTable` o como `DropTable`/`CreateTable`; si detecta eliminación y creación, ajusta la migración para no perder datos existentes.
+
 ## Seguridad aplicada en el módulo de autenticación
 
 - Contraseñas hasheadas y verificadas por ASP.NET Core Identity.
