@@ -70,6 +70,9 @@ builder.Services.AddOptions<EmailSettings>()
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+builder.Services.Configure<AdminUserOptions>(
+    builder.Configuration.GetSection(AdminUserOptions.SectionName));
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddScoped<IEmailSender, DevelopmentEmailSender>();
@@ -84,6 +87,11 @@ builder.Services.AddControllersWithViews(options =>
 });
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    await AdminUserSeeder.SeedAsync(app.Services);
+}
 
 if (!app.Environment.IsDevelopment())
 {

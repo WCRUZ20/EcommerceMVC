@@ -15,6 +15,17 @@ dotnet user-secrets set "Email:UserName" "smtp_user" --project Ecommerce/Ecommer
 dotnet user-secrets set "Email:Password" "TU_PASSWORD_SMTP" --project Ecommerce/Ecommerce.csproj
 ```
 
+
+## Usuario administrador de desarrollo
+
+En entorno `Development`, al iniciar la aplicación se crea o actualiza el rol `Admin` y el usuario de pruebas configurado en `appsettings.Development.json`:
+
+- Usuario: `admin`
+- Email: `admin@ecommerce.local`
+- Contraseña: `Admin123456!`
+
+Estas credenciales son solo para pruebas locales. Cambia los valores mediante configuración segura si necesitas otros datos.
+
 ## Base de datos
 
 La aplicación está preparada para SQL Server con autenticación SQL. Después de configurar la cadena de conexión, crea la migración inicial y aplica la base de datos:
