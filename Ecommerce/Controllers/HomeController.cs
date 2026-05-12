@@ -1,9 +1,11 @@
 using Ecommerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Ecommerce.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()

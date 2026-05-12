@@ -10,17 +10,80 @@
     <link rel="stylesheet" href="~/Ecommerce.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Ecommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
+        <div class="app-shell">
+            <aside class="app-sidebar" aria-label="Navegación principal">
+                <div class="app-sidebar__brand">
+                    <span class="app-sidebar__logo">E</span>
+                    <div>
+                        <strong>Ecommerce</strong>
+                        <small>Panel administrativo</small>
+                    </div>
+                </div>
+
+                <nav class="app-sidebar__nav">
+                    <a class="app-sidebar__link @(currentController == "Home" ? "active" : string.Empty)" asp-area="" asp-controller="Home" asp-action="Index">
+                        <span aria-hidden="true">⌂</span>
+                        Home
+                    </a>
+                    <a class="app-sidebar__link @(currentController == "Orders" ? "active" : string.Empty)" asp-area="" asp-controller="Orders" asp-action="Index">
+                        <span aria-hidden="true">▣</span>
+                        Pedido
+                    </a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="app-sidebar__link @(currentController == "Users" ? "active" : string.Empty)" asp-area="" asp-controller="Users" asp-action="Index">
+                            <span aria-hidden="true">👥</span>
+                            Usuarios
+                        </a>
+                    }
+
+                    <a class="app-sidebar__link @(currentController == "Settings" ? "active" : string.Empty)" asp-area="" asp-controller="Settings" asp-action="Index">
+                        <span aria-hidden="true">⚙</span>
+                        Configuración
+                    </a>
+                </nav>
+
+                <div class="app-sidebar__footer">
+                    <div class="app-sidebar__user">
+                        <small>Sesión iniciada</small>
+                        <span>@User.Identity?.Name</span>
+                    </div>
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                        <button type="submit" class="btn btn-outline-light w-100">
+                            Cerrar sesión
+                        </button>
+                    </form>
+                </div>
+            </aside>
+
+            <div class="app-content">
+                <header class="app-topbar">
+                    <div>
+                        <span class="text-muted">@DateTime.UtcNow.ToString("dd/MM/yyyy")</span>
+                        <h1 class="h4 mb-0">@ViewData["Title"]</h1>
+                    </div>
+                </header>
+
+                <main role="main" class="app-main">
+                    @RenderBody()
+                </main>
+            </div>
         </div>
-    </footer>
+    }
+    else
+    {
+        <div class="container auth-container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

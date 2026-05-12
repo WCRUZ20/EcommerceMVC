@@ -1,0 +1,48 @@
+@model IReadOnlyList<Ecommerce.Models.ViewModels.UserListItemViewModel>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success" role="alert">@statusMessage</div>
+}
+
+<div class="card dashboard-card">
+    <div class="card-body p-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+            <div>
+                <h2 class="h4 mb-1">Usuarios</h2>
+                <p class="text-muted mb-0">Administra las cuentas con acceso al sistema.</p>
+            </div>
+            <a class="btn btn-primary align-self-md-start" asp-action="Create">Crear usuario</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Creado</th>
+                        <th>Último acceso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>@user.Email</td>
+                            <td>@(user.Roles.Count > 0 ? string.Join(", ", user.Roles) : "Sin rol")</td>
+                            <td>@user.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@(user.LastLoginAtUtc?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? "Sin acceso")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
