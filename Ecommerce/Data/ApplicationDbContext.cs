@@ -13,6 +13,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Product> Products => Set<Product>();
 
+    public DbSet<DiscProduct> DiscProducts => Set<DiscProduct>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -101,6 +103,52 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasColumnName("regular_price")
                 .HasPrecision(18, 2)
                 .IsRequired();
+        });
+
+
+        builder.Entity<DiscProduct>(entity =>
+        {
+            entity.ToTable("DiscProducts");
+
+            entity.HasKey(discProduct => new { discProduct.Sku, discProduct.IdUser });
+
+            entity.Property(discProduct => discProduct.Sku)
+                .HasColumnName("sku")
+                .HasMaxLength(64)
+                .IsRequired();
+
+            entity.Property(discProduct => discProduct.IdUser)
+                .HasColumnName("idUser")
+                .IsRequired();
+
+            entity.Property(discProduct => discProduct.RegularPrice)
+                .HasColumnName("regular_price")
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            entity.Property(discProduct => discProduct.DiscountPercent)
+                .HasColumnName("discount_percent")
+                .HasPrecision(5, 2)
+                .IsRequired();
+
+            entity.Property(discProduct => discProduct.FinalPrice)
+                .HasColumnName("final_price")
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            entity.HasIndex(discProduct => new { discProduct.Sku, discProduct.IdUser })
+                .IsUnique();
+
+            entity.HasOne(discProduct => discProduct.Product)
+                .WithMany()
+                .HasForeignKey(discProduct => discProduct.Sku)
+                .HasPrincipalKey(product => product.Sku)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(discProduct => discProduct.User)
+                .WithMany()
+                .HasForeignKey(discProduct => discProduct.IdUser)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<IdentityRole>(entity => entity.ToTable("Roles"));

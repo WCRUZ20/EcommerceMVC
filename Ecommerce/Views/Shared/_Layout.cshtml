@@ -13,8 +13,6 @@
     @if (User.Identity?.IsAuthenticated == true)
     {
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
-
         <div class="app-shell">
             <aside class="app-sidebar" aria-label="Navegación principal">
                 <div class="app-sidebar__brand">
@@ -35,20 +33,10 @@
                         Pedido
                     </a>
 
-                    <div class="app-sidebar__group @(currentController == "Products" ? "active" : string.Empty)">
-                        <div class="app-sidebar__group-title">
-                            <span aria-hidden="true">▦</span>
-                            Productos
-                        </div>
-                        <div class="app-sidebar__submenu">
-                            <a class="app-sidebar__sublink @(currentController == "Products" && currentAction == "Index" ? "active" : string.Empty)" asp-area="" asp-controller="Products" asp-action="Index">
-                                Lista de productos
-                            </a>
-                            <a class="app-sidebar__sublink @(currentController == "Products" && currentAction == "DiscountDefinition" ? "active" : string.Empty)" asp-area="" asp-controller="Products" asp-action="DiscountDefinition">
-                                Definición de descuento
-                            </a>
-                        </div>
-                    </div>
+                    <a class="app-sidebar__link @(currentController == "Products" ? "active" : string.Empty)" asp-area="" asp-controller="Products" asp-action="Index">
+                        <span aria-hidden="true">▦</span>
+                        Productos
+                    </a>
 
                     @if (User.IsInRole("Admin"))
                     {
