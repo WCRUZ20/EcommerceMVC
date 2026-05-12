@@ -10,6 +10,7 @@ using System.Text;
 
 namespace Ecommerce.Controllers;
 
+[Authorize]
 [EnableRateLimiting("auth")]
 public class AccountController(
     UserManager<ApplicationUser> userManager,
@@ -21,6 +22,11 @@ public class AccountController(
     [AllowAnonymous]
     public IActionResult Login(string? returnUrl = null)
     {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToLocal(returnUrl);
+        }
+
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
@@ -29,6 +35,11 @@ public class AccountController(
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToLocal(model.ReturnUrl);
+        }
+
         if (!ModelState.IsValid)
         {
             return View(model);
