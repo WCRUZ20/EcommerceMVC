@@ -7,10 +7,10 @@ namespace EcommerceMvc.Seed
     {
         public static async Task SeedAdminUserAsync(
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration,
+            ILogger logger)
         {
-            // Roles
-
             string[] roles =
             {
                 "Admin",
@@ -23,19 +23,23 @@ namespace EcommerceMvc.Seed
 
                 if (!exists)
                 {
-                    await roleManager.CreateAsync(
-                        new IdentityRole(role));
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
             }
 
-            // Usuario admin
+            var adminSection = configuration.GetSection("SeedAdmin");
+            var adminEmail = adminSection["Email"];
+            var adminPassword = adminSection["Password"];
+            var adminUserName = adminSection["UserName"] ?? "admin";
 
-            const string adminUserName = "admin";
-            const string adminEmail = "admin@ecommerce.com";
-            const string adminPassword = "Admin123*";
+            if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+            {
+                logger.LogWarning(
+                    "No se creó usuario administrador inicial. Configure SeedAdmin:Email y SeedAdmin:Password mediante secretos de usuario o variables de entorno.");
+                return;
+            }
 
-            var existingUser =
-                await userManager.FindByEmailAsync(adminEmail);
+            var existingUser = await userManager.FindByEmailAsync(adminEmail);
 
             if (existingUser != null)
                 return;
@@ -49,15 +53,20 @@ namespace EcommerceMvc.Seed
                 IsActive = true
             };
 
-            var result = await userManager.CreateAsync(
-                adminUser,
-                adminPassword);
+            var result = await userManager.CreateAsync(adminUser, adminPassword);
 
             if (result.Succeeded)
             {
-                await userManager.AddToRoleAsync(
-                    adminUser,
-                    "Admin");
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+                return;
+            }
+
+            foreach (var error in result.Errors)
+            {
+                logger.LogError(
+                    "No se pudo crear el administrador inicial. Código: {Code}. Descripción: {Description}",
+                    error.Code,
+                    error.Description);
             }
         }
     }

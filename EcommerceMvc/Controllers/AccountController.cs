@@ -1,4 +1,5 @@
 ﻿using EcommerceMvc.Models;
+using EcommerceMvc.Services;
 using EcommerceMvc.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,18 @@ namespace EcommerceMvc.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender,
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
             _logger = logger;
         }
 
@@ -41,13 +45,15 @@ namespace EcommerceMvc.Controllers
 
             ApplicationUser? user;
 
-            if (model.UserNameOrEmail.Contains("@"))
+            var identifier = model.UserNameOrEmail.Trim();
+
+            if (identifier.Contains('@'))
             {
-                user = await _userManager.FindByEmailAsync(model.UserNameOrEmail);
+                user = await _userManager.FindByEmailAsync(identifier);
             }
             else
             {
-                user = await _userManager.FindByNameAsync(model.UserNameOrEmail);
+                user = await _userManager.FindByNameAsync(identifier);
             }
 
             if (user == null)
@@ -58,7 +64,7 @@ namespace EcommerceMvc.Controllers
 
             if (!user.IsActive)
             {
-                ModelState.AddModelError(string.Empty, "El usuario se encuentra inactivo.");
+                ModelState.AddModelError(string.Empty, "Usuario o contraseña incorrectos.");
                 return View(model);
             }
 
@@ -115,7 +121,8 @@ namespace EcommerceMvc.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var email = model.Email.Trim();
+            var user = await _userManager.FindByEmailAsync(email);
 
             // Seguridad: no revelar si el correo existe o no.
             if (user == null || !user.IsActive)
@@ -133,12 +140,15 @@ namespace EcommerceMvc.Controllers
                 controller: "Account",
                 values: new
                 {
-                    email = model.Email,
+                    email,
                     token = encodedToken
                 },
                 protocol: Request.Scheme);
 
-            _logger.LogInformation("Link recuperación contraseña: {ResetUrl}", resetUrl);
+            if (!string.IsNullOrWhiteSpace(resetUrl))
+            {
+                await _emailSender.SendPasswordResetLinkAsync(email, resetUrl);
+            }
 
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
         }
@@ -169,7 +179,7 @@ namespace EcommerceMvc.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email.Trim());
 
             if (user == null)
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
