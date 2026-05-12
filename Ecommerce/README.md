@@ -45,6 +45,7 @@ Las tablas de ASP.NET Core Identity se mapearon sin el prefijo `AspNet`:
 - `RoleClaims`
 - `UserTokens`
 - `TiposDocumento`
+- `Products`
 
 Si ya tienes una base de datos creada con tablas `AspNet...`, genera una migración nueva desde Visual Studio con la Consola del Administrador de paquetes o desde una terminal:
 
@@ -54,6 +55,8 @@ dotnet ef database update --project Ecommerce/Ecommerce.csproj
 ```
 
 La tabla `TiposDocumento` queda configurada con datos iniciales para `Cedula` (10), `Ruc` (13) y `Pasaporte` (sin validación de longitud).
+
+La tabla `Products` almacena productos con los campos `sku`, `long_descripcion`, `short_descripcion`, `stock` y `regular_price`; el `sku` se configura como único y `regular_price` usa precisión decimal `18,2`.
 
 Revisa la migración antes de aplicarla en producción para confirmar si EF Core detectó los cambios como `RenameTable` o como `DropTable`/`CreateTable`; si detecta eliminación y creación, ajusta la migración para no perder datos existentes.
 

@@ -11,6 +11,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<TipoDocumento> TiposDocumento => Set<TipoDocumento>();
 
+    public DbSet<Product> Products => Set<Product>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -67,6 +69,38 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 new TipoDocumento { Id = 1, Descripcion = "Cedula", CountValid = 10 },
                 new TipoDocumento { Id = 2, Descripcion = "Ruc", CountValid = 13 },
                 new TipoDocumento { Id = 3, Descripcion = "Pasaporte", CountValid = null });
+        });
+
+        builder.Entity<Product>(entity =>
+        {
+            entity.ToTable("Products");
+
+            entity.Property(product => product.Sku)
+                .HasColumnName("sku")
+                .HasMaxLength(64)
+                .IsRequired();
+
+            entity.HasIndex(product => product.Sku)
+                .IsUnique();
+
+            entity.Property(product => product.LongDescripcion)
+                .HasColumnName("long_descripcion")
+                .HasMaxLength(2000)
+                .IsRequired();
+
+            entity.Property(product => product.ShortDescripcion)
+                .HasColumnName("short_descripcion")
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(product => product.Stock)
+                .HasColumnName("stock")
+                .IsRequired();
+
+            entity.Property(product => product.RegularPrice)
+                .HasColumnName("regular_price")
+                .HasPrecision(18, 2)
+                .IsRequired();
         });
 
         builder.Entity<IdentityRole>(entity => entity.ToTable("Roles"));
